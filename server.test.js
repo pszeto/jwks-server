@@ -82,3 +82,24 @@ describe("POST /token", () => {
     assert.equal(payload.iss, "jwks-server");
   });
 });
+
+describe("request counter", () => {
+  let app;
+
+  before(async () => {
+    app = await buildServer();
+  });
+
+  it("increments on each request", async () => {
+    assert.equal(app.getRequestCount(), 0);
+
+    await app.inject({ method: "GET", url: "/.well-known/jwks.json" });
+    assert.equal(app.getRequestCount(), 1);
+
+    await app.inject({ method: "POST", url: "/token", payload: {} });
+    assert.equal(app.getRequestCount(), 2);
+
+    await app.inject({ method: "GET", url: "/.well-known/jwks.json" });
+    assert.equal(app.getRequestCount(), 3);
+  });
+});
