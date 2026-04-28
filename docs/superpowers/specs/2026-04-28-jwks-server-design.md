@@ -91,6 +91,39 @@ No dev dependencies.
 - `package.json` with `"start": "node server.js"` script
 - No build step — plain JS, runs directly with Node
 
+## Dockerfile
+
+Multi-stage build for a small image:
+
+1. **Build stage:** `node:22-alpine`, copy `package.json` and `package-lock.json`, run `npm ci --omit=dev`
+2. **Runtime stage:** `node:22-alpine`, copy `node_modules` and `server.js` from build stage, expose port `3000`, run as non-root user
+
+Image is intended to be pushed to DockerHub.
+
+## Kubernetes Manifests
+
+Deployed in the `jwks` namespace.
+
+### `deployment.yaml`
+
+- `apiVersion: apps/v1`, kind `Deployment`
+- Namespace: `jwks`
+- Name: `jwks-server`
+- 1 replica
+- Container image: placeholder (`jwks-server:latest`) — user substitutes their DockerHub image
+- Container port: `3000`
+- Environment variables `PORT` and `KEY_SIZE` with defaults
+- Liveness/readiness probes hitting `GET /.well-known/jwks.json` on port `3000`
+
+### `service.yaml`
+
+- `apiVersion: v1`, kind `Service`
+- Namespace: `jwks`
+- Name: `jwks-server`
+- Type: `ClusterIP`
+- Port `80` → target port `3000`
+- Selector matches the deployment's pod labels
+
 ## Out of Scope
 
 - Key persistence or rotation
@@ -98,3 +131,5 @@ No dev dependencies.
 - CLI wrapper
 - HTTPS/TLS
 - Authentication on the `/token` endpoint
+- Namespace creation (user creates `jwks` namespace themselves)
+- Ingress configuration
