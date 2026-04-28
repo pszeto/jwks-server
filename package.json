@@ -1,0 +1,16 @@
+{
+  "name": "jwks-server",
+  "version": "1.0.0",
+  "description": "Local development JWKS server with JWT minting",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test server.test.js"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^5.8.5",
+    "jose": "^6.2.3"
+  }
+}
