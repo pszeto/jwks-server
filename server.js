@@ -49,3 +49,18 @@ async function buildServer() {
 }
 
 module.exports = { buildServer };
+
+if (require.main === module) {
+  const port = parseInt(process.env.PORT || "3000", 10);
+
+  buildServer().then((app) => {
+    app.listen({ port, host: "0.0.0.0" }, (err, address) => {
+      if (err) {
+        console.error(err);
+        process.exit(1);
+      }
+      console.log(`JWKS server listening on ${address}`);
+      console.log(`kid: ${app.kid}`);
+    });
+  });
+}
