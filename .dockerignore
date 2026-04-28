@@ -1,0 +1,8 @@
+node_modules
+npm-debug.log
+docs
+k8s
+.git
+.gitignore
+*.md
+server.test.js
