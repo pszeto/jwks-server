@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jwks-server
+  namespace: jwks
+  labels:
+    app: jwks-server
+spec:
+  type: ClusterIP
+  selector:
+    app: jwks-server
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
