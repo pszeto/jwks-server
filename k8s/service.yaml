@@ -6,7 +6,7 @@ metadata:
   labels:
     app: jwks-server
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: jwks-server
   ports:

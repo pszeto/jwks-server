@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: jwks-server
-          image: jwks-server:latest
+          image: pszeto/jwks-server:latest
           ports:
             - containerPort: 3000
           env:
@@ -25,15 +25,3 @@ spec:
               value: "3000"
             - name: KEY_SIZE
               value: "2048"
-          livenessProbe:
-            httpGet:
-              path: /.well-known/jwks.json
-              port: 3000
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /.well-known/jwks.json
-              port: 3000
-            initialDelaySeconds: 3
-            periodSeconds: 5
