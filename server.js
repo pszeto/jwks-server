@@ -1,5 +1,5 @@
 const fastify = require("fastify");
-const { generateKeyPair, exportJWK } = require("jose");
+const { generateKeyPair, exportJWK, SignJWT } = require("jose");
 const crypto = require("node:crypto");
 
 async function buildServer() {
@@ -24,7 +24,24 @@ async function buildServer() {
     return { keys: [publicJwk] };
   });
 
+  app.post("/token", async (request, reply) => {
+    requestCount++;
+    console.log(`[${requestCount}] POST /token`);
+
+    const claims = request.body || {};
+
+    const token = await new SignJWT(claims)
+      .setProtectedHeader({ alg: "RS256", kid })
+      .setIssuer("jwks-server")
+      .setIssuedAt()
+      .setExpirationTime("1h")
+      .sign(privateKey);
+
+    return { token };
+  });
+
   app.decorate("privateKey", privateKey);
+  app.decorate("publicKey", publicKey);
   app.decorate("kid", kid);
   app.decorate("getRequestCount", () => requestCount);
 
